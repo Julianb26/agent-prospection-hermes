@@ -16,11 +16,11 @@ Contexte de départ (23/06/2026) :
 - [x] Créer le repo GitHub `agent-prospection-hermes`
 - [x] Créer `PLAN.md` (ce fichier) et `JOURNAL.md` (carnet de bord)
 
-## Étape 1 — Installer et tester Hermes Agent en local (Windows)
+## Étape 1 — Installer et tester Hermes Agent en local (Windows, sans Docker)
 But : vérifier que tout fonctionne sur ta machine avant de mettre en ligne sur Railway.
-- [ ] Installer les prérequis si manquants : Git (déjà fait), Python 3.11+, Node.js, ripgrep, ffmpeg
-- [ ] Suivre le script d'installation Windows de Hermes (voir la doc officielle :
-      https://hermes-agent.nousresearch.com/docs)
+On installe Hermes nativement (pas de conteneur), via le script officiel qui se charge
+lui-même d'installer Python, Node.js, etc.
+- [ ] Dans PowerShell, lancer : `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
 - [ ] Lancer `hermes setup` et choisir **OpenRouter** comme fournisseur de modèle, coller la clé API
 - [ ] Lancer `hermes` en mode terminal et vérifier qu'on peut discuter avec l'agent en local
 
@@ -38,10 +38,15 @@ But : valider la connexion Discord <-> Hermes avant de la mettre sur Railway.
 - [ ] Lancer `hermes gateway start`
 - [ ] Envoyer un message au bot sur Discord et vérifier qu'il répond
 
-## Étape 4 — Préparer le déploiement sur Railway
-- [ ] Repérer le `Dockerfile` / `docker-compose.yml` fourni dans le repo Hermes Agent
+## Étape 4 — Préparer le déploiement sur Railway (sans Docker)
+But : Railway peut construire et lancer le service à partir d'une simple commande de build
+et d'une commande de démarrage — pas besoin d'écrire de Dockerfile.
 - [ ] Créer un nouveau projet sur Railway (railway.app > New Project)
-- [ ] Connecter Railway à une source de déploiement (image Docker ou repo Git contenant la config)
+- [ ] Ajouter un service "Empty Service" (ou connecté à ce repo GitHub)
+- [ ] Dans les Settings du service Railway, définir :
+      - **Build Command** : `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`
+      - **Start Command** : la commande qui lance la passerelle Hermes/Discord (à confirmer
+        une fois l'installation locale faite, ex. `hermes gateway start`)
 - [ ] Définir les variables d'environnement sur Railway :
       - clé API OpenRouter
       - token du bot Discord
