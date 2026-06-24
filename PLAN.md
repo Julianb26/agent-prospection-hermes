@@ -20,23 +20,24 @@ Contexte de départ (23/06/2026) :
 But : vérifier que tout fonctionne sur ta machine avant de mettre en ligne sur Railway.
 On installe Hermes nativement (pas de conteneur), via le script officiel qui se charge
 lui-même d'installer Python, Node.js, etc.
-- [ ] Dans PowerShell, lancer : `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
-- [ ] Lancer `hermes setup` et choisir **OpenRouter** comme fournisseur de modèle, coller la clé API
+- [x] Dans PowerShell, lancer : `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
+- [x] Lancer `hermes setup` et choisir **OpenRouter** comme fournisseur de modèle (`openai/gpt-5.4-mini`), coller la clé API
 - [ ] Lancer `hermes` en mode terminal et vérifier qu'on peut discuter avec l'agent en local
 
-## Étape 2 — Créer le bot Discord
+## Étape 2 — Créer le bot Discord (fait le 24/06/2026)
 But : avoir un "robot" Discord que Hermes pourra piloter.
-- [ ] Aller sur https://discord.com/developers/applications et créer une nouvelle application
-- [ ] Dans l'onglet "Bot", créer le bot et récupérer son **Token** (à garder secret, jamais dans Git)
-- [ ] Activer les intents nécessaires (Message Content Intent)
-- [ ] Générer un lien d'invitation (OAuth2 > URL Generator, scope `bot`, permissions de base :
-      lire/envoyer des messages) et inviter le bot sur ton serveur Discord de test
+- [x] Aller sur https://discord.com/developers/applications et créer une nouvelle application (`Agent_Hermes`)
+- [x] Dans l'onglet "Bot", créer le bot et récupérer son **Token** (à garder secret, jamais dans Git)
+- [x] Activer les intents nécessaires (Message Content Intent)
+- [x] Générer un lien d'invitation (OAuth2 > URL Generator, scope `bot`, permissions de base :
+      lire/envoyer des messages) et inviter le bot sur le serveur Discord de test (visible hors ligne dans la liste des membres)
 
 ## Étape 3 — Connecter Hermes à Discord en local
 But : valider la connexion Discord <-> Hermes avant de la mettre sur Railway.
-- [ ] Lancer `hermes gateway setup` et renseigner le token du bot Discord
+- [x] Token Discord configuré via `hermes setup` (allowlist restreinte à l'utilisateur `julian_cm_`)
 - [ ] Lancer `hermes gateway start`
 - [ ] Envoyer un message au bot sur Discord et vérifier qu'il répond
+- [ ] (Optionnel) Définir un "home channel" avec `/set-home` dans un canal Discord
 
 ## Étape 4 — Préparer le déploiement sur Railway (sans Docker)
 But : Railway peut construire et lancer le service à partir d'une simple commande de build
