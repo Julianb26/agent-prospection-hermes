@@ -33,6 +33,12 @@ Modèle à copier-coller pour une nouvelle entrée :
     ÉTAPE 1 à 9), en conservant le travail déjà fait — vérifié via la transcription de la vidéo
     du formateur que l'Étape 1 (lier GitHub à Claude) correspond bien à `gh auth login`, déjà
     réalisé.
+  - Résolution d'un troisième blocage : malgré la résolution apparente de `julian_cm_` vers son
+    ID Discord dans les logs (`[Discord] Resolved 'julian_cm_' -> 700267933410000916`), le bot
+    rejetait quand même les messages (`Unauthorized user`). Corrigé en configurant directement
+    l'ID numérique dans `DISCORD_ALLOWED_USERS` (au lieu du nom d'utilisateur texte) via
+    `hermes config set DISCORD_ALLOWED_USERS 700267933410000916`, puis relance de la gateway.
+    **Confirmé fonctionnel.**
 - Blocages / problèmes rencontrés :
   - `hermes gateway start` ne fonctionne pas sans avoir installé un service au préalable
     (`hermes gateway install`) — pour un test ponctuel, la bonne commande est
@@ -40,6 +46,9 @@ Modèle à copier-coller pour une nouvelle entrée :
   - Des avertissements `Auxiliary Nous client unavailable` apparaissent en boucle dans les
     logs (lié à l'absence de compte Nous Portal) — sans impact constaté sur le fonctionnement
     réel du chat Discord, donc ignorés pour l'instant.
+  - La résolution automatique de nom d'utilisateur Discord (`julian_cm_`) vers un ID dans
+    `DISCORD_ALLOWED_USERS` ne semble pas fiable (log de résolution réussi, mais rejet quand
+    même) — préférer renseigner directement l'**ID numérique Discord** dans cette variable.
 - État actuel :
   - **Hermes fonctionne en local et répond sur Discord** avec un modèle gratuit OpenRouter.
     `railway.json` est prêt dans le repo. Rien n'est encore déployé sur Railway : il reste à

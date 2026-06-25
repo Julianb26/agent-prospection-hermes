@@ -80,6 +80,9 @@ et d'une commande de démarrage — pas besoin d'écrire de Dockerfile.
   les 3 intents (Presence, Server Members, Message Content) sont bien activés ET sauvegardés
   dans Discord Developer Portal > Bot > Privileged Gateway Intents (le toggle peut sembler
   activé sans être réellement enregistré — vérifier après un rechargement de page).
+- Si le bot répond `Unauthorized user` malgré une résolution de nom d'utilisateur réussie dans
+  les logs : renseigner directement l'**ID numérique Discord** dans `DISCORD_ALLOWED_USERS`
+  (`hermes config set DISCORD_ALLOWED_USERS <id>`) plutôt que le nom d'utilisateur texte.
 - Si OpenRouter renvoie `HTTP 402 Insufficient credits` : le compte n'a pas de crédits pour le
   modèle payant choisi. Soit ajouter des crédits sur https://openrouter.ai/settings/credits,
   soit choisir un modèle gratuit (suffixe `:free`, ex. `nvidia/nemotron-3-super-120b-a12b:free`)
