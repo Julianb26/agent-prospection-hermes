@@ -5,7 +5,7 @@
     "buildCommand": "curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash"
   },
   "deploy": {
-    "startCommand": "hermes gateway run",
+    "startCommand": "/usr/local/bin/hermes gateway run",
     "restartPolicyType": "ON_FAILURE"
   }
 }
