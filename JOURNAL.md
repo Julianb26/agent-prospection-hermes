@@ -16,6 +16,41 @@ Modèle à copier-coller pour une nouvelle entrée :
 
 ---
 
+## 2026-06-25
+- Fait :
+  - Résolution du blocage Discord : les 3 "Privileged Gateway Intents" (Presence, Server
+    Members, Message Content) ont été activés ET sauvegardés dans le Developer Portal — le
+    toggle semblait s'activer sans se sauvegarder réellement, il a fallu les cocher tous les
+    trois (pas seulement Message Content) pour que ça persiste.
+  - `hermes gateway run` (mode foreground) lancé avec succès en local : `Agent_Hermes` répond
+    bien aux messages envoyés sur Discord, l'utilisateur `julian_cm_` est reconnu et autorisé.
+  - Résolution d'un second blocage : le compte OpenRouter n'avait pas de crédits pour le modèle
+    payant `openai/gpt-5.4-mini` (erreur HTTP 402). Changement du modèle par défaut vers
+    `nvidia/nemotron-3-super-120b-a12b:free` (gratuit) via `hermes config set model.default`.
+  - Création de `railway.json` dans le repo (config Nixpacks sans Docker : build via
+    `install.sh`, démarrage via `hermes gateway run`), commité et poussé sur GitHub.
+  - Reprise du déroulé sous la forme imposée par l'instruction du formateur (numérotation
+    ÉTAPE 1 à 9), en conservant le travail déjà fait — vérifié via la transcription de la vidéo
+    du formateur que l'Étape 1 (lier GitHub à Claude) correspond bien à `gh auth login`, déjà
+    réalisé.
+- Blocages / problèmes rencontrés :
+  - `hermes gateway start` ne fonctionne pas sans avoir installé un service au préalable
+    (`hermes gateway install`) — pour un test ponctuel, la bonne commande est
+    `hermes gateway run` (mode foreground).
+  - Des avertissements `Auxiliary Nous client unavailable` apparaissent en boucle dans les
+    logs (lié à l'absence de compte Nous Portal) — sans impact constaté sur le fonctionnement
+    réel du chat Discord, donc ignorés pour l'instant.
+- État actuel :
+  - **Hermes fonctionne en local et répond sur Discord** avec un modèle gratuit OpenRouter.
+    `railway.json` est prêt dans le repo. Rien n'est encore déployé sur Railway : il reste à
+    créer le projet Railway, le connecter au repo GitHub, ajouter les variables d'environnement
+    (OPENROUTER_API_KEY, DISCORD_BOT_TOKEN, DISCORD_ALLOWED_USERS) et lancer le premier
+    déploiement.
+- Prochaine étape :
+  - Étape 4 du PLAN.md (Étape 8-9 dans la numérotation de l'instruction du formateur) :
+    créer le projet Railway, connecter le repo GitHub, configurer les variables d'environnement,
+    et valider le premier déploiement.
+
 ## 2026-06-24
 - Fait :
   - Installation de Hermes Agent en local sur Windows, sans Docker, via le script officiel

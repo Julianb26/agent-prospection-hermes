@@ -21,8 +21,10 @@ But : vérifier que tout fonctionne sur ta machine avant de mettre en ligne sur 
 On installe Hermes nativement (pas de conteneur), via le script officiel qui se charge
 lui-même d'installer Python, Node.js, etc.
 - [x] Dans PowerShell, lancer : `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
-- [x] Lancer `hermes setup` et choisir **OpenRouter** comme fournisseur de modèle (`openai/gpt-5.4-mini`), coller la clé API
-- [ ] Lancer `hermes` en mode terminal et vérifier qu'on peut discuter avec l'agent en local
+- [x] Lancer `hermes setup` et choisir **OpenRouter** comme fournisseur de modèle, coller la clé API
+- [x] Vérifier qu'on peut discuter avec l'agent (validé via Discord, voir Étape 3 — modèle finalement
+      réglé sur `nvidia/nemotron-3-super-120b-a12b:free` car le compte OpenRouter n'avait pas de
+      crédits pour `openai/gpt-5.4-mini`, qui était payant)
 
 ## Étape 2 — Créer le bot Discord (fait le 24/06/2026)
 But : avoir un "robot" Discord que Hermes pourra piloter.
@@ -32,22 +34,22 @@ But : avoir un "robot" Discord que Hermes pourra piloter.
 - [x] Générer un lien d'invitation (OAuth2 > URL Generator, scope `bot`, permissions de base :
       lire/envoyer des messages) et inviter le bot sur le serveur Discord de test (visible hors ligne dans la liste des membres)
 
-## Étape 3 — Connecter Hermes à Discord en local
+## Étape 3 — Connecter Hermes à Discord en local (fait le 25/06/2026)
 But : valider la connexion Discord <-> Hermes avant de la mettre sur Railway.
 - [x] Token Discord configuré via `hermes setup` (allowlist restreinte à l'utilisateur `julian_cm_`)
-- [ ] Lancer `hermes gateway start`
-- [ ] Envoyer un message au bot sur Discord et vérifier qu'il répond
-- [ ] (Optionnel) Définir un "home channel" avec `/set-home` dans un canal Discord
+- [x] Lancer `hermes gateway run` (pas `gateway start`, qui exige d'installer un service — voir
+      Notes/pièges ci-dessous)
+- [x] Envoyer un message au bot sur Discord et vérifier qu'il répond — **fonctionne**
+- [ ] (Optionnel) Définir un "home channel" avec `/sethome` dans un canal Discord
 
 ## Étape 4 — Préparer le déploiement sur Railway (sans Docker)
 But : Railway peut construire et lancer le service à partir d'une simple commande de build
 et d'une commande de démarrage — pas besoin d'écrire de Dockerfile.
-- [ ] Créer un nouveau projet sur Railway (railway.app > New Project)
-- [ ] Ajouter un service "Empty Service" (ou connecté à ce repo GitHub)
-- [ ] Dans les Settings du service Railway, définir :
-      - **Build Command** : `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`
-      - **Start Command** : la commande qui lance la passerelle Hermes/Discord (à confirmer
-        une fois l'installation locale faite, ex. `hermes gateway start`)
+- [x] Créer `railway.json` dans le repo (config Nixpacks, sans Docker) :
+      build = `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`,
+      start = `hermes gateway run`
+- [ ] Créer un nouveau projet sur Railway (railway.app > New Project > Deploy from GitHub repo)
+- [ ] Connecter le repo GitHub `agent-prospection-hermes`
 - [ ] Définir les variables d'environnement sur Railway :
       - clé API OpenRouter
       - token du bot Discord
@@ -70,3 +72,18 @@ et d'une commande de démarrage — pas besoin d'écrire de Dockerfile.
   d'environnement (`.env` local, ignoré par Git ; variables Railway en production).
 - Une seule passerelle Discord doit être active à la fois (locale OU Railway), sinon le bot
   répond en double ou en conflit.
+- `hermes gateway start` exige qu'un service (Windows Scheduled Task / systemd / launchd) soit
+  installé au préalable (`hermes gateway install`). Pour un test ponctuel sans installer de
+  service permanent, utiliser `hermes gateway run` (mode foreground, recommandé aussi pour
+  Docker/WSL/Termux — et donc adapté à Railway).
+- Si Discord renvoie `PrivilegedIntentsRequired` au démarrage de la gateway : vérifier que
+  les 3 intents (Presence, Server Members, Message Content) sont bien activés ET sauvegardés
+  dans Discord Developer Portal > Bot > Privileged Gateway Intents (le toggle peut sembler
+  activé sans être réellement enregistré — vérifier après un rechargement de page).
+- Si OpenRouter renvoie `HTTP 402 Insufficient credits` : le compte n'a pas de crédits pour le
+  modèle payant choisi. Soit ajouter des crédits sur https://openrouter.ai/settings/credits,
+  soit choisir un modèle gratuit (suffixe `:free`, ex. `nvidia/nemotron-3-super-120b-a12b:free`)
+  via `hermes config set model.default <modèle>`.
+- Des avertissements `Auxiliary Nous client unavailable` peuvent apparaître dans les logs si
+  aucun compte Nous Portal n'est lié (`hermes auth`) — sans impact sur le fonctionnement
+  principal (chat + Discord) si on n'utilise pas les fonctionnalités liées à Nous Portal.
