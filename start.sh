@@ -19,3 +19,4 @@ echo "[start.sh] Keys now present in /root/.hermes/.env:"
 grep -o '^[A-Z_]*=' /root/.hermes/.env | sort -u || true
 
 exec /usr/local/bin/hermes gateway run
+# trigger rebuild 20260627T094556Z
