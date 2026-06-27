@@ -3,9 +3,13 @@ set -e
 
 echo "[start.sh] HOME=$HOME"
 echo "[start.sh] whoami=$(whoami)"
+echo "[start.sh] ---- runtime env var NAMES (values hidden) ----"
+env | cut -d= -f1 | sort | sed 's/^/[start.sh] env: /'
+echo "[start.sh] ---- end env var NAMES ----"
 echo "[start.sh] OPENROUTER_API_KEY length: ${#OPENROUTER_API_KEY}"
 echo "[start.sh] DISCORD_BOT_TOKEN length: ${#DISCORD_BOT_TOKEN}"
 echo "[start.sh] DISCORD_ALLOWED_USERS value: ${DISCORD_ALLOWED_USERS}"
+echo "[start.sh] RAILWAY_TEST canary value: ${RAILWAY_TEST}"
 
 mkdir -p /root/.hermes
 
@@ -15,8 +19,4 @@ mkdir -p /root/.hermes
   echo "DISCORD_ALLOWED_USERS=${DISCORD_ALLOWED_USERS}"
 } >> /root/.hermes/.env
 
-echo "[start.sh] Keys now present in /root/.hermes/.env:"
-grep -o '^[A-Z_]*=' /root/.hermes/.env | sort -u || true
-
 exec /usr/local/bin/hermes gateway run
-# trigger rebuild 20260627T094556Z
