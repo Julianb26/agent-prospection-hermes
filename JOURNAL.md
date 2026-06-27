@@ -16,6 +16,14 @@ Modèle à copier-coller pour une nouvelle entrée :
 
 ---
 
+## 2026-06-27 (suite 3) — Modèle de facturation des contrats
+- Fait :
+  - Précision de Julian : l'offre concession a un **setup (paiement unique)** ET un **abonnement
+    (récurrent)**. Table `contrat` clarifiée : `montant_setup` (unique) + `montant_recurrent`
+    + `recurrence` (mensuel/annuel/aucun). Remplace `frais_installation`/`montant_mensuel`.
+  - Couvre tous les cas : concession = setup + abonnement ; formation = setup seul.
+    (Point "à affiner" précédent désormais résolu.)
+
 ## 2026-06-27 (suite 2) — Nouvel ICP "Formation IA"
 - Fait :
   - Julian est aussi **formateur en IA** et veut prospecter des clients pour ses formations.

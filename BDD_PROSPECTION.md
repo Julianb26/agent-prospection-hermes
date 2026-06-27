@@ -125,9 +125,10 @@ Cela évite les doublons et conserve tout l'historique de prospection.
 | date_signature | date | |
 | date_debut | date | début de l'abonnement |
 | date_fin | date | null si toujours actif |
-| montant_mensuel | numeric | pour suivre le chiffre d'affaires |
-| frais_installation | numeric | one-shot éventuel (optionnel) |
-| statut_abonnement | text | actif / en_pause / resilie / impaye |
+| montant_setup | numeric | **paiement unique initial** : setup concession, ou prix d'une formation |
+| montant_recurrent | numeric | **montant de l'abonnement** récurrent (vide/0 si pas d'abonnement) |
+| recurrence | text | mensuel / annuel / aucun |
+| statut_abonnement | text | actif / en_pause / resilie / impaye (concerne la partie récurrente) |
 | date_prochain_renouvellement | date | pour anticiper les renouvellements |
 | notes | text | |
 | created_at / updated_at | timestamptz | |
@@ -181,11 +182,14 @@ Plan d'import (à faire lors de l'implémentation) : créer la table `entreprise
 l'Excel en remplissant ces 3 champs pour tout le lot. Ne PAS coder "utilise Mecaplanning"
 uniquement dans `source` (sinon non filtrable proprement).
 
-## Points à affiner
-- **Contrat abonnement vs paiement unique** : la table `contrat` est pensée « abonnement »
-  (`montant_mensuel`, `date_prochain_renouvellement`). Pour l'ICP **Formation IA**, une vente
-  est souvent un **paiement unique**. À l'implémentation, prévoir un champ `recurrence`
-  (`mensuel` / `ponctuel`) et/ou un champ `montant` générique, pour gérer les deux cas.
+## Modèle de facturation d'un contrat (setup + abonnement)
+Un `contrat` peut porter **deux composantes** en même temps :
+- **`montant_setup`** : paiement unique (le setup en concession, ou le prix d'une formation).
+- **`montant_recurrent`** + **`recurrence`** : l'abonnement récurrent (mensuel / annuel).
+
+Exemples :
+- **Concession auto** : `montant_setup` (installation) + `montant_recurrent` mensuel (abonnement IA vocale).
+- **Formation IA** : `montant_setup` seul (prix de la formation), `montant_recurrent` vide, `recurrence` = `aucun`.
 
 ## À décider lors de l'implémentation (prochaine session)
 - Comment l'agent écrit/lit dans Supabase (clé API service, ou MCP Supabase, ou table API).
