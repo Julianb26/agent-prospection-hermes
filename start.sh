@@ -17,4 +17,14 @@ mkdir -p /root/.hermes
   echo "DISCORD_ALLOWED_USERS=${ALLOWED_USERS}"
 } >> /root/.hermes/.env
 
+# Forcer le modèle : le config.yaml de Railway est régénéré à neuf à chaque build,
+# avec un modèle payant par défaut (anthropic/claude-opus-4.6) -> erreur HTTP 402
+# si le compte OpenRouter n'a pas de crédits. On force donc un modèle gratuit.
+# (Modifiable via la variable Railway HERMES_MODEL si besoin.)
+MODEL="${HERMES_MODEL:-nvidia/nemotron-3-super-120b-a12b:free}"
+echo "[start.sh] Reglage du modele par defaut: ${MODEL}"
+/usr/local/bin/hermes config set model.default "${MODEL}" || true
+/usr/local/bin/hermes config set model.provider openrouter || true
+/usr/local/bin/hermes config set model.base_url "https://openrouter.ai/api/v1" || true
+
 exec /usr/local/bin/hermes gateway run
