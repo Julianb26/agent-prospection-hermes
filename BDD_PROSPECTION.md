@@ -18,12 +18,24 @@ La base ne doit PAS être figée sur l'automobile. Elle gère plusieurs cibles (
 Pour cela : une table `icp` liste les cibles, et les champs sont génériques
 (`secteur`, `logiciel_metier`) plutôt que spécifiques à l'auto.
 
+La base distingue aussi **prospects et clients** (voir section dédiée plus bas) grâce à une
+table `contrat`, sans dupliquer les contacts.
+
 > Note : la prospection de l'activité **illustrateur événementiel** (mariages / événements
 > pro) fera l'objet d'une **base séparée**, conçue plus tard. Ne pas la mélanger ici.
 
+## Prospect vs Client
+Un **prospect** et un **client** ne sont pas dans des tables séparées : c'est la même
+entreprise / personne à deux moments de la relation. On les distingue ainsi :
+- **prospect** = une `personne` dont le `statut_pipeline` n'est pas encore `gagne`.
+- **client** = une `entreprise` qui possède au moins une ligne dans la table `contrat`.
+
+Quand un prospect signe, on ne le déplace nulle part : on crée simplement un `contrat`.
+Cela évite les doublons et conserve tout l'historique de prospection.
+
 ---
 
-## Les 4 tables
+## Les 5 tables
 
 ### 1. `icp` — tes profils de cible
 | Colonne | Type | Rôle |
@@ -96,6 +108,23 @@ Pour cela : une table `icp` liste les cibles, et les champs sont génériques
 | date_prochaine_action | date | |
 | created_at | timestamptz | |
 
+### 5. `contrat` — l'abonnement d'un client
+| Colonne | Type | Rôle |
+|---|---|---|
+| id | uuid (PK) | identifiant |
+| entreprise_id | uuid (FK → entreprise) | le client (l'entreprise) |
+| personne_id | uuid (FK → personne) | contact signataire / référent (optionnel) |
+| offre | text | ex : "IA vocale RDV atelier" |
+| date_signature | date | |
+| date_debut | date | début de l'abonnement |
+| date_fin | date | null si toujours actif |
+| montant_mensuel | numeric | pour suivre le chiffre d'affaires |
+| frais_installation | numeric | one-shot éventuel (optionnel) |
+| statut_abonnement | text | actif / en_pause / resilie / impaye |
+| date_prochain_renouvellement | date | pour anticiper les renouvellements |
+| notes | text | |
+| created_at / updated_at | timestamptz | |
+
 ---
 
 ## Pipeline détaillé (valeurs de `statut_pipeline`)
@@ -117,8 +146,10 @@ Pour cela : une table `icp` liste les cibles, et les champs sont génériques
 
 ## Relations (résumé)
 - un `icp` → plusieurs `entreprise`
-- une `entreprise` → plusieurs `personne`
+- une `entreprise` → plusieurs `personne` (les prospects/contacts)
+- une `entreprise` → plusieurs `contrat` (devient cliente dès qu'elle en a un)
 - une `personne` → plusieurs `activite`
+- une `personne` → plusieurs `contrat` (en tant que signataire, lien optionnel)
 
 ## Choix techniques retenus
 - Identifiants en `uuid` (standard Supabase).

@@ -30,8 +30,14 @@ Modèle à copier-coller pour une nouvelle entrée :
       les statuts.
   - Noté pour plus tard : Julian a une **2e activité (illustrateur événementiel mariages /
     pro)** qui nécessitera une **base de prospection séparée**, à concevoir distinctement.
+  - Ajout (suite à la remarque du formateur sur les relations prospects/entreprises/clients) :
+    distinction **prospect / client** modélisée proprement via une **5e table `contrat`**
+    (option "contacts + table contrat" choisie par Julian, qui veut suivre offre, montant,
+    date de signature, statut d'abonnement). Un client = une entreprise ayant ≥ 1 contrat.
+    Pas de tables séparées prospect/client (éviter les doublons). Schéma final = 5 tables :
+    `icp`, `entreprise`, `personne`, `activite`, `contrat`.
 - État actuel :
-  - Schéma conçu et documenté. Pas encore implémenté sur Supabase.
+  - Schéma conçu et documenté (5 tables). Pas encore implémenté sur Supabase.
 - Prochaine étape :
   - Implémentation sur Supabase : créer le projet/les tables, décider comment l'agent y accède
     (clé service / MCP Supabase), et configurer la sécurité (RLS).
