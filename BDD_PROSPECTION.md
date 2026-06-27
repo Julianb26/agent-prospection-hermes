@@ -160,6 +160,22 @@ Cela évite les doublons et conserve tout l'historique de prospection.
 - `attributs jsonb` sur `entreprise` pour les champs propres à un secteur, sans casser la
   structure commune (optionnel, à n'utiliser que si besoin).
 
+## Importer une liste existante (ex : fichier Excel Mecaplanning)
+Julian dispose déjà d'un fichier Excel listant des entreprises **utilisant Mecaplanning**.
+Supabase permet d'importer directement un CSV/Excel dans une table.
+
+Distinction importante à respecter à l'import :
+- **`source`** = la provenance de la donnée → `"Import Excel Mecaplanning"`.
+- **`logiciel_metier`** = la caractéristique de l'entreprise → `"Mecaplanning"` (c'est CE champ
+  qui rend la liste exploitable : on peut filtrer "toutes les entreprises sous Mecaplanning"
+  quelle que soit leur provenance).
+- **`statut_icp`** = `"cible_prioritaire"` (les utilisateurs Mecaplanning sont les prospects
+  les plus chauds, puisque l'IA vocale s'y connecte directement).
+
+Plan d'import (à faire lors de l'implémentation) : créer la table `entreprise`, puis importer
+l'Excel en remplissant ces 3 champs pour tout le lot. Ne PAS coder "utilise Mecaplanning"
+uniquement dans `source` (sinon non filtrable proprement).
+
 ## À décider lors de l'implémentation (prochaine session)
 - Comment l'agent écrit/lit dans Supabase (clé API service, ou MCP Supabase, ou table API).
 - Sécurité (RLS Postgres) — la base ne doit être accessible que par toi / l'agent.
