@@ -16,6 +16,26 @@ Modèle à copier-coller pour une nouvelle entrée :
 
 ---
 
+## 2026-06-27 (suite) — Conception de la BDD de prospection (PHASE 6, design seulement)
+- Fait :
+  - Conception du schéma de la base de prospection Supabase (rien créé sur Supabase, design
+    uniquement comme demandé par l'instruction du formateur). Document complet :
+    `BDD_PROSPECTION.md`.
+  - Choix structurants validés avec Julian :
+    - Base **multi-ICP** (pas figée sur l'auto) : ajout d'une table `icp` + champs génériques
+      `secteur` / `logiciel_metier` (Mecaplanning, Interfast, autres à venir).
+    - 4 tables : `icp`, `entreprise`, `personne`, `activite`.
+    - Pipeline **détaillé** (13 statuts : a_qualifier → ... → gagne / perdu / en_pause).
+    - L'agent doit : mémoriser, rappeler les relances, rédiger avec le contexte, mettre à jour
+      les statuts.
+  - Noté pour plus tard : Julian a une **2e activité (illustrateur événementiel mariages /
+    pro)** qui nécessitera une **base de prospection séparée**, à concevoir distinctement.
+- État actuel :
+  - Schéma conçu et documenté. Pas encore implémenté sur Supabase.
+- Prochaine étape :
+  - Implémentation sur Supabase : créer le projet/les tables, décider comment l'agent y accède
+    (clé service / MCP Supabase), et configurer la sécurité (RLS).
+
 ## 2026-06-27 — 🎯 OBJECTIF PRINCIPAL ATTEINT
 - Fait :
   - **Déploiement de Hermes sur Railway réussi : le bot répond sur Discord, hébergé dans le
