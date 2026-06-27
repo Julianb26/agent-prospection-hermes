@@ -16,6 +16,18 @@ Modèle à copier-coller pour une nouvelle entrée :
 
 ---
 
+## 2026-06-27 (suite 2) — Nouvel ICP "Formation IA"
+- Fait :
+  - Julian est aussi **formateur en IA** et veut prospecter des clients pour ses formations.
+    Ajouté comme **nouvel ICP "Formation IA"** dans la base multi-ICP existante (B2B) — aucune
+    modification de structure, juste une ligne dans `icp`. Bonne validation du choix multi-ICP.
+  - Noté un point à affiner : une vente de formation est souvent un **paiement unique**, alors
+    que la table `contrat` est pensée « abonnement » (`montant_mensuel`). Prévoir `recurrence`
+    (mensuel/ponctuel) et/ou `montant` générique à l'implémentation.
+  - Rappel : l'activité **illustrateur événementiel** reste sur une base SÉPARÉE (pas un ICP ici).
+- Prochaine étape : inchangée (implémentation Supabase). Définir aussi les critères de
+  qualification de l'ICP Formation IA (cible, taille, secteur) le moment venu.
+
 ## 2026-06-27 (suite) — Conception de la BDD de prospection (PHASE 6, design seulement)
 - Fait :
   - Conception du schéma de la base de prospection Supabase (rien créé sur Supabase, design

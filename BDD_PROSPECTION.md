@@ -13,7 +13,12 @@ Permettre à l'agent Hermès de :
 ## Principe : base multi-ICP
 La base ne doit PAS être figée sur l'automobile. Elle gère plusieurs cibles (ICP) :
 - ICP principal : concessions / pros de l'auto (IA vocale de RDV atelier connectée **Mecaplanning**)
+- ICP : **Formation IA** — entreprises/pros à qui Julian vend ses formations en IA (B2B)
 - ICP futurs : artisans sous **Interfast**, et d'autres à venir
+
+👉 Ajouter un nouvel ICP = **une simple ligne dans la table `icp`**, aucune modification de
+structure. Les champs propres à l'auto (`marque_reseau`, `logiciel_metier=Mecaplanning`)
+restent simplement vides pour les autres ICP.
 
 Pour cela : une table `icp` liste les cibles, et les champs sont génériques
 (`secteur`, `logiciel_metier`) plutôt que spécifiques à l'auto.
@@ -175,6 +180,12 @@ Distinction importante à respecter à l'import :
 Plan d'import (à faire lors de l'implémentation) : créer la table `entreprise`, puis importer
 l'Excel en remplissant ces 3 champs pour tout le lot. Ne PAS coder "utilise Mecaplanning"
 uniquement dans `source` (sinon non filtrable proprement).
+
+## Points à affiner
+- **Contrat abonnement vs paiement unique** : la table `contrat` est pensée « abonnement »
+  (`montant_mensuel`, `date_prochain_renouvellement`). Pour l'ICP **Formation IA**, une vente
+  est souvent un **paiement unique**. À l'implémentation, prévoir un champ `recurrence`
+  (`mensuel` / `ponctuel`) et/ou un champ `montant` générique, pour gérer les deux cas.
 
 ## À décider lors de l'implémentation (prochaine session)
 - Comment l'agent écrit/lit dans Supabase (clé API service, ou MCP Supabase, ou table API).
