@@ -16,6 +16,15 @@ Modèle à copier-coller pour une nouvelle entrée :
 
 ---
 
+## 2026-06-27 (suite 4) — Architecture : 2 agents séparés
+- Décision : la prospection de l'activité **illustration événementielle** sera gérée par un
+  **agent Hermès séparé** (2e bot Discord + 2e service Railway + base dédiée), pas par l'agent
+  B2B actuel. Raison : tons et données très différents (B2B tech vs créatif/mariage ; cibles
+  souvent des particuliers, pas des entreprises).
+- Conséquence : l'agent + la base actuels (`agent-prospection-hermes`) ne couvrent QUE le B2B
+  (IA vocale auto + Formation IA). L'agent illustration se fera plus tard en reproduisant la
+  même recette (Discord bot + Railway + Supabase).
+
 ## 2026-06-27 (suite 3) — Modèle de facturation des contrats
 - Fait :
   - Précision de Julian : l'offre concession a un **setup (paiement unique)** ET un **abonnement

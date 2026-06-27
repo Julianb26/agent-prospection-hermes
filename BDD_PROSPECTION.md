@@ -27,7 +27,9 @@ La base distingue aussi **prospects et clients** (voir section dédiée plus bas
 table `contrat`, sans dupliquer les contacts.
 
 > Note : la prospection de l'activité **illustrateur événementiel** (mariages / événements
-> pro) fera l'objet d'une **base séparée**, conçue plus tard. Ne pas la mélanger ici.
+> pro) fera l'objet d'un **agent Hermès séparé** (2e bot Discord + 2e service Railway + base
+> dédiée), conçu plus tard. Décision du 2026-06-27 : séparation totale, on ne mélange pas ici.
+> Cette base-ci ne couvre QUE les activités B2B (IA vocale auto + Formation IA).
 
 ## Prospect vs Client
 Un **prospect** et un **client** ne sont pas dans des tables séparées : c'est la même
