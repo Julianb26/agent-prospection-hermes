@@ -42,24 +42,30 @@ But : valider la connexion Discord <-> Hermes avant de la mettre sur Railway.
 - [x] Envoyer un message au bot sur Discord et vérifier qu'il répond — **fonctionne**
 - [ ] (Optionnel) Définir un "home channel" avec `/sethome` dans un canal Discord
 
-## Étape 4 — Préparer le déploiement sur Railway (sans Docker)
-But : Railway peut construire et lancer le service à partir d'une simple commande de build
-et d'une commande de démarrage — pas besoin d'écrire de Dockerfile.
+## Étape 4 — Déploiement sur Railway (sans Docker) — FAIT le 27/06/2026
+But : Railway construit et lance le service à partir d'une commande de build et d'un script
+de démarrage — pas de Dockerfile.
 - [x] Créer `railway.json` dans le repo (config Nixpacks, sans Docker) :
       build = `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`,
-      start = `hermes gateway run`
-- [ ] Créer un nouveau projet sur Railway (railway.app > New Project > Deploy from GitHub repo)
-- [ ] Connecter le repo GitHub `agent-prospection-hermes`
-- [ ] Définir les variables d'environnement sur Railway :
-      - clé API OpenRouter
-      - token du bot Discord
-      - toute autre variable demandée par `hermes setup` en local
-- [ ] Lancer le déploiement et suivre les logs Railway jusqu'à ce que le service soit "healthy"
+      start = `bash start.sh`
+- [x] Créer le projet Railway (Deploy from GitHub repo) et connecter `agent-prospection-hermes`
+- [x] Définir les variables d'environnement sur Railway (penser à cliquer **Deploy** pour les
+      appliquer ! cf. Notes) :
+      - `OPENROUTER_API_KEY`
+      - `DISCORD_BOT_TOKEN`
+      - `DISCORD_ALLOWED_USERS` (= 700267933410000916)
+- [x] Créer `start.sh` qui, au démarrage du conteneur :
+      - écrit les secrets dans `/root/.hermes/.env` (Hermes lit un fichier, pas les env vars)
+      - force le modèle gratuit `nvidia/nemotron-3-super-120b-a12b:free` (sinon le config.yaml
+        régénéré au build repart sur un modèle payant -> erreur 402)
+      - règle `discord.auto_thread` (réponses dans le canal principal plutôt qu'en fil)
+- [x] Déploiement réussi, service "healthy", aucune erreur bloquante dans les logs
 
-## Étape 5 — Test final en production
-- [ ] Envoyer un message au bot Discord (le même serveur de test, ou un serveur définitif)
-- [ ] Vérifier que la réponse vient bien de l'instance Railway (et plus de ta machine locale)
-- [ ] Arrêter le `hermes gateway start` en local pour ne pas avoir deux instances qui répondent en même temps
+## Étape 5 — Test final en production — FAIT le 27/06/2026
+- [x] Message envoyé au bot Discord, **réponse reçue** ("Oui, je suis là ! 👋 ...")
+- [x] Confirmé : la réponse vient de l'instance Railway (le terminal local n'était PAS lancé,
+      le bot apparaît "en ligne" tout seul)
+- [x] Pas d'instance locale à arrêter (on n'a pas installé `hermes gateway` en service local)
 
 ## Étape 6 — Suivi
 - [ ] Après chaque session de travail, ajouter une entrée dans `JOURNAL.md` (voir le modèle dans ce fichier)
@@ -87,6 +93,19 @@ et d'une commande de démarrage — pas besoin d'écrire de Dockerfile.
   modèle payant choisi. Soit ajouter des crédits sur https://openrouter.ai/settings/credits,
   soit choisir un modèle gratuit (suffixe `:free`, ex. `nvidia/nemotron-3-super-120b-a12b:free`)
   via `hermes config set model.default <modèle>`.
+- **Railway — variables d'environnement** : après les avoir ajoutées/modifiées, elles restent
+  en attente ("Apply N changes" / "Edited") tant qu'on ne clique pas sur le bouton **Deploy**.
+  Tant que ce n'est pas fait, elles arrivent **vides** dans le conteneur. C'était la cause
+  racine du plus gros blocage de ce projet.
+- **Railway — Redeploy vs rebuild** : le bouton "Redeploy" réutilise parfois une image déjà
+  construite (code/script obsolète). Pour forcer une vraie reconstruction à partir du dernier
+  code, pousser un nouveau commit sur GitHub.
+- **Railway — Hermes ne lit pas les env vars directement** : il lit le fichier
+  `/root/.hermes/.env`. Le script `start.sh` y recopie donc les secrets au démarrage. De même,
+  le `config.yaml` est régénéré à neuf à chaque build (modèle payant par défaut) -> `start.sh`
+  force le modèle et les réglages Discord à chaque démarrage.
+- **Railway — chemin de la commande** : utiliser `/usr/local/bin/hermes` (PATH non fiable sur
+  l'image Nixpacks).
 - Des avertissements `Auxiliary Nous client unavailable` peuvent apparaître dans les logs si
   aucun compte Nous Portal n'est lié (`hermes auth`) — sans impact sur le fonctionnement
   principal (chat + Discord) si on n'utilise pas les fonctionnalités liées à Nous Portal.

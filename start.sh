@@ -27,4 +27,10 @@ echo "[start.sh] Reglage du modele par defaut: ${MODEL}"
 /usr/local/bin/hermes config set model.provider openrouter || true
 /usr/local/bin/hermes config set model.base_url "https://openrouter.ai/api/v1" || true
 
+# Répondre directement dans le canal principal plutôt que de créer un fil (thread)
+# pour chaque conversation. Mettre HERMES_AUTO_THREAD=true pour revenir aux fils.
+AUTO_THREAD="${HERMES_AUTO_THREAD:-false}"
+echo "[start.sh] discord.auto_thread = ${AUTO_THREAD}"
+/usr/local/bin/hermes config set discord.auto_thread "${AUTO_THREAD}" || true
+
 exec /usr/local/bin/hermes gateway run

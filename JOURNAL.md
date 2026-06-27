@@ -16,6 +16,41 @@ Modèle à copier-coller pour une nouvelle entrée :
 
 ---
 
+## 2026-06-27 — 🎯 OBJECTIF PRINCIPAL ATTEINT
+- Fait :
+  - **Déploiement de Hermes sur Railway réussi : le bot répond sur Discord, hébergé dans le
+    cloud 24h/24, sans terminal local.** Premier message-réponse confirmé.
+  - Projet Railway créé (Deploy from GitHub repo), connecté à `agent-prospection-hermes`.
+  - Variables d'environnement ajoutées sur Railway : `OPENROUTER_API_KEY`, `DISCORD_BOT_TOKEN`,
+    `DISCORD_ALLOWED_USERS`.
+  - Création d'un script `start.sh` (lancé par Railway via `railway.json` -> `bash start.sh`)
+    qui, au démarrage du conteneur : écrit les secrets dans `/root/.hermes/.env`, force le
+    modèle gratuit, fixe provider/base_url OpenRouter, et règle `discord.auto_thread`.
+- Blocages rencontrés et résolus (dans l'ordre) :
+  1. `hermes: command not found` sur Railway -> utiliser le chemin complet
+     `/usr/local/bin/hermes` (le PATH n'est pas fiable sur l'image Nixpacks).
+  2. Variables d'env vides dans le conteneur -> Hermes lit le fichier `~/.hermes/.env`, pas les
+     variables d'environnement directement : `start.sh` les y recopie au démarrage.
+  3. Variables toujours vides malgré tout -> **les variables Railway étaient en attente
+     ("Apply N changes" / staged), jamais appliquées : il faut cliquer le bouton "Deploy"
+     pour les activer réellement.** (Cause racine du plus gros blocage.)
+  4. `DISCORD_ALLOWED_USERS` restait vide (les 2 autres ok) -> valeur de secours codée en dur
+     dans `start.sh` (un ID Discord n'est pas une donnée secrète).
+  5. Erreur `HTTP 402 Insufficient credits` avec `anthropic/claude-opus-4.6` -> le config.yaml
+     de Railway est régénéré à neuf au build (modèle payant par défaut) ; `start.sh` force
+     désormais le modèle gratuit `nvidia/nemotron-3-super-120b-a12b:free` à chaque démarrage.
+  - NB : le bouton "Redeploy" de Railway réutilise parfois une image obsolète ; pour forcer un
+    vrai rebuild, pousser un commit sur GitHub.
+- État actuel :
+  - **Agent Hermès opérationnel en production sur Railway, interagit via Discord.** Modèle
+    gratuit OpenRouter. Réponses dans le canal principal (auto_thread désactivé au dernier
+    commit).
+- Prochaines étapes (sessions futures, cf. PHASE 6 de l'instruction du formateur) :
+  - Réfléchir à la base de données (tables `personne`, `entreprise`, `activite`) AVANT de
+    passer sur Supabase.
+  - Éventuellement : ajouter des crédits OpenRouter pour utiliser un modèle plus performant,
+    définir un "home channel" Discord, activer des skills/outils.
+
 ## 2026-06-25
 - Fait :
   - Résolution du blocage Discord : les 3 "Privileged Gateway Intents" (Presence, Server
