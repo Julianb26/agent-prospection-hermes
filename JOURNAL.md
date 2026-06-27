@@ -36,6 +36,13 @@ Modèle à copier-coller pour une nouvelle entrée :
     date de signature, statut d'abonnement). Un client = une entreprise ayant ≥ 1 contrat.
     Pas de tables séparées prospect/client (éviter les doublons). Schéma final = 5 tables :
     `icp`, `entreprise`, `personne`, `activite`, `contrat`.
+  - Précisions sur les champs (selon les priorités terrain de Julian) : ajout de
+    `entreprise.linkedin_url` (page LinkedIn de l'entreprise) et `entreprise.marque_reseau`
+    (marque/réseau auto, optionnel). `logiciel_metier` rendu explicitement optionnel (pas
+    toujours trouvable à l'avance). Critères de qualif. importants pour lui : taille/volume
+    (nb RDV atelier/mois), localisation, marque. Pour un contact : coordonnées (email/tél) et
+    fonction exacte. Principe retenu : démarrer avec les champs essentiels, ajouter le reste
+    plus tard (Supabase permet d'ajouter une colonne sans rien casser).
 - État actuel :
   - Schéma conçu et documenté (5 tables). Pas encore implémenté sur Supabase.
 - Prochaine étape :

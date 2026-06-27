@@ -57,12 +57,14 @@ Cela évite les doublons et conserve tout l'historique de prospection.
 | icp_id | uuid (FK → icp) | à quelle cible elle appartient |
 | nom | text | nom de l'entreprise |
 | secteur | text | secteur d'activité |
-| logiciel_metier | text | Mecaplanning / Interfast / autre / inconnu |
+| logiciel_metier | text | Mecaplanning / Interfast / autre / inconnu — **optionnel** (souvent découvert pendant l'échange ou la démo, pas toujours trouvable à l'avance) |
 | site_web | text | |
+| linkedin_url | text | **page LinkedIn de l'entreprise** |
+| marque_reseau | text | marque(s) / réseau auto — spécifique auto, optionnel (vide pour les autres ICP) |
 | ville | text | |
 | departement | text | |
 | region | text | |
-| taille | text | nb salariés / volume (proxy ICP) |
+| taille | text | nb salariés ou **nb de RDV atelier / mois** (proxy du potentiel) |
 | statut_icp | text | cible_prioritaire / secondaire / hors_cible |
 | attributs | jsonb | champs spécifiques au secteur (optionnel, avancé) |
 | source | text | d'où vient le prospect |
